@@ -346,6 +346,9 @@ wrap.addEventListener('touchmove', e => {
 }, {passive:true});
 wrap.addEventListener('touchend', () => { touch0 = null; });
 
+// Always reset GH button on load
+document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('gh-save-btn');if(b){b.textContent='Push to GitHub';b.disabled=false;}});
+
 // Init
 requestAnimationFrame(() => {
   const r = wrap.getBoundingClientRect();
@@ -385,7 +388,6 @@ async function saveToGH() {
   btn.disabled = true; btn.textContent = 'Pushing...';
   setStatus('');
 
-  // Persist settings (token omitted for security after first use)
   localStorage.setItem(LS+'repo', repo);
   localStorage.setItem(LS+'branch', branch);
   localStorage.setItem(LS+'file', file);
@@ -396,7 +398,6 @@ async function saveToGH() {
   const headers = { Authorization: `token ${token}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github+json' };
 
   try {
-    // Check if file exists to get SHA for update
     let sha = null;
     try {
       const check = await fetch(`${apiBase}?ref=${branch}`, {headers});
@@ -413,12 +414,13 @@ async function saveToGH() {
     }
     const data = await res.json();
     const pageUrl = `https://${repo.split('/')[0]}.github.io/${repo.split('/')[1]}/${file}`;
-    setStatus(`Pushed successfully! View at ${pageUrl}`, 'ok');
+    setStatus(`Pushed! Live at: ${pageUrl}`, 'ok');
     btn.textContent = 'Pushed!';
     setTimeout(() => { btn.textContent = 'Push to GitHub'; btn.disabled = false; }, 3000);
   } catch(e) {
     setStatus('Error: ' + e.message, 'err');
-    btn.textContent = 'Push to GitHub'; btn.disabled = false;
+  } finally {
+    setTimeout(() => { btn.textContent = 'Push to GitHub'; btn.disabled = false; }, 3000);
   }
 }
 </script>
