@@ -1,17 +1,18 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mind Map</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f3ef;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px}
-h1{font-size:15px;font-weight:500;color:#3d3d3a;margin-bottom:12px;letter-spacing:-.01em}
-#mm-wrap{position:relative;width:min(780px,100%);height:580px;overflow:hidden;background:#faf9f7;border:0.5px solid rgba(0,0,0,.12);border-radius:12px;cursor:grab;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f3ef;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
+h1{font-size:15px;font-weight:500;color:#3d3d3a;margin-bottom:12px}
+#mm-wrap{position:relative;width:min(780px,100%);height:560px;overflow:hidden;background:#faf9f7;border:0.5px solid rgba(0,0,0,.12);border-radius:12px;cursor:grab;user-select:none}
 #mm-wrap.dragging{cursor:grabbing}
 #mm-canvas{position:absolute;top:0;left:0;transform-origin:0 0}
 #mm-svg{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
-.mm-node{position:absolute;transform:translate(-50%,-50%);padding:7px 13px;border-radius:8px;border:0.5px solid #d0cec7;background:#fff;font-size:13px;font-family:inherit;color:#2c2c2a;cursor:default;min-width:64px;text-align:center;transition:border-color .12s}
-.mm-node:hover{border-color:#888780;z-index:5}
+.mm-node{position:absolute;transform:translate(-50%,-50%);padding:7px 13px;border-radius:8px;border:0.5px solid #d0cec7;background:#fff;font-size:13px;font-family:inherit;color:#2c2c2a;cursor:default;min-width:64px;text-align:center}
 .mm-node.is-root{font-size:14px;font-weight:500;padding:11px 18px;background:#e6f1fb;border:1px solid #378add;color:#0c447c;border-radius:10px}
 .mm-node[data-c="0"]{background:#e6f1fb;border-color:#85b7eb;color:#0c447c}
 .mm-node[data-c="1"]{background:#eaf3de;border-color:#97c459;color:#27500a}
@@ -20,40 +21,38 @@ h1{font-size:15px;font-weight:500;color:#3d3d3a;margin-bottom:12px;letter-spacin
 .mm-node[data-c="4"]{background:#faece7;border-color:#f0997b;color:#4a1b0c}
 .mm-node[data-c="5"]{background:#fbeaf0;border-color:#ed93b1;color:#4b1528}
 .mm-label{outline:none;cursor:default;white-space:nowrap}
-.mm-label[contenteditable=true]{cursor:text;border-bottom:1.5px solid currentColor;padding-bottom:1px}
+.mm-label[contenteditable=true]{cursor:text;border-bottom:1.5px solid currentColor}
 .mm-acts{display:none;gap:3px;margin-top:5px;justify-content:center}
 .mm-node:hover .mm-acts{display:flex}
-.mm-btn{font-size:11px;padding:1px 6px;line-height:1.6;border:0.5px solid #ccc;border-radius:3px;background:transparent;color:#73726c;cursor:pointer;font-family:inherit}
+.mm-node:hover{border-color:#888780;z-index:5}
+.mm-btn{font-size:11px;padding:1px 6px;border:0.5px solid #ccc;border-radius:3px;background:transparent;color:#73726c;cursor:pointer;font-family:inherit}
 .mm-btn:hover{background:#f0ede8;color:#2c2c2a}
-.mm-footer{margin-top:10px;font-size:11px;color:#888780;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
-.mm-footer span{opacity:.5}
 .mm-toolbar{display:flex;gap:8px;margin-bottom:10px;align-items:center;width:min(780px,100%)}
 .tb-btn{font-size:12px;padding:4px 10px;border:0.5px solid #d0cec7;border-radius:6px;background:#fff;color:#3d3d3a;cursor:pointer;font-family:inherit}
 .tb-btn:hover{background:#f0ede8}
 .tb-btn.gh{background:#24292f;color:#fff;border-color:#24292f}
 .tb-btn.gh:hover{background:#3a4049}
 #zoom-label{font-size:12px;color:#888780;margin-left:auto}
-
-/* GitHub modal */
-#gh-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center}
-#gh-overlay.open{display:flex}
-#gh-modal{background:#fff;border-radius:12px;padding:24px 28px;width:min(420px,90vw);font-family:inherit;box-shadow:0 8px 32px rgba(0,0,0,.18)}
-#gh-modal h2{font-size:15px;font-weight:500;color:#2c2c2a;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-#gh-modal h2 svg{flex-shrink:0}
+.mm-footer{margin-top:10px;font-size:11px;color:#888780;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#gh-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+#gh-modal{background:#fff;border-radius:12px;padding:24px 28px;width:min(420px,90vw);font-family:inherit}
+#gh-modal h2{font-size:15px;font-weight:500;color:#2c2c2a;margin-bottom:16px}
 .gh-field{margin-bottom:12px}
-.gh-field label{display:block;font-size:11px;color:#73726c;margin-bottom:4px;letter-spacing:.02em;text-transform:uppercase}
+.gh-field label{display:block;font-size:11px;color:#73726c;margin-bottom:4px;text-transform:uppercase;letter-spacing:.02em}
 .gh-field input{width:100%;padding:7px 10px;border:0.5px solid #d0cec7;border-radius:6px;font-size:13px;font-family:inherit;color:#2c2c2a;outline:none}
 .gh-field input:focus{border-color:#378add}
-.gh-field .hint{font-size:11px;color:#888780;margin-top:3px}
-#gh-status{font-size:12px;min-height:18px;margin-bottom:10px;border-radius:5px;padding:0 6px}
-#gh-status.ok{color:#27500a;background:#eaf3de;padding:5px 8px}
-#gh-status.err{color:#4a1b0c;background:#faece7;padding:5px 8px}
-.gh-actions{display:flex;gap:8px;justify-content:flex-end}
+.gh-hint{font-size:11px;color:#888780;margin-top:3px}
+#gh-status{font-size:12px;min-height:16px;margin-bottom:10px;padding:0 2px}
+#gh-status.ok{color:#27500a;background:#eaf3de;padding:6px 8px;border-radius:5px}
+#gh-status.err{color:#4a1b0c;background:#faece7;padding:6px 8px;border-radius:5px}
+.gh-row{display:flex;gap:10px}
+.gh-row .gh-field{flex:1}
+.gh-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
 .gh-cancel{font-size:13px;padding:6px 14px;border:0.5px solid #d0cec7;border-radius:6px;background:transparent;color:#3d3d3a;cursor:pointer;font-family:inherit}
 .gh-cancel:hover{background:#f0ede8}
-.gh-save{font-size:13px;padding:6px 14px;border:none;border-radius:6px;background:#24292f;color:#fff;cursor:pointer;font-family:inherit;font-weight:500}
-.gh-save:hover{background:#3a4049}
-.gh-save:disabled{opacity:.5;cursor:not-allowed}
+.gh-push{font-size:13px;padding:6px 16px;border:none;border-radius:6px;background:#24292f;color:#fff;cursor:pointer;font-family:inherit;font-weight:500}
+.gh-push:hover{background:#3a4049}
+.gh-push:disabled{opacity:.5;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -62,373 +61,72 @@ h1{font-size:15px;font-weight:500;color:#3d3d3a;margin-bottom:12px;letter-spacin
   <button class="tb-btn" onclick="resetView()">Reset view</button>
   <button class="tb-btn" onclick="addRootChild()">+ Add branch</button>
   <span id="zoom-label">85%</span>
-  <button class="tb-btn gh" onclick="openGH()">⬆ Save to GitHub</button>
+  <button class="tb-btn gh" onclick="openGH()">&#8593; Save to GitHub</button>
 </div>
-
-<div id="gh-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center" onclick="if(event.target===this)closeGH()">
+<div id="mm-wrap">
+  <div id="mm-canvas">
+    <svg id="mm-svg" width="1" height="1"></svg>
+    <div id="mm-nd"></div>
+  </div>
+</div>
+<div class="mm-footer">
+  <span>Double-click to rename</span><span>·</span>
+  <span>Hover for +add / -delete / collapse</span><span>·</span>
+  <span>Drag to pan · Scroll to zoom</span>
+</div>
+<div id="gh-overlay" onclick="if(event.target===this)closeGH()">
   <div id="gh-modal">
     <h2>Save to GitHub</h2>
     <div class="gh-field">
       <label>Personal Access Token</label>
       <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-      <div class="hint">Needs <code>repo</code> scope &nbsp;·&nbsp; <a href="https://github.com/settings/tokens/new" target="_blank" style="color:#378add">Create token ↗</a></div>
+      <div class="gh-hint">Needs repo scope</div>
     </div>
     <div class="gh-field">
       <label>Repository (owner/repo)</label>
       <input type="text" id="gh-repo" placeholder="username/my-repo">
     </div>
-    <div style="display:flex;gap:10px">
-      <div class="gh-field" style="flex:1">
-        <label>Branch</label>
-        <input type="text" id="gh-branch" placeholder="main">
-      </div>
-      <div class="gh-field" style="flex:1.4">
-        <label>Filename</label>
-        <input type="text" id="gh-file" placeholder="mindmap.html">
-      </div>
+    <div class="gh-row">
+      <div class="gh-field"><label>Branch</label><input type="text" id="gh-branch" value="main"></div>
+      <div class="gh-field"><label>Filename</label><input type="text" id="gh-file" value="index.html"></div>
     </div>
-    <div id="gh-status" class=""></div>
+    <div id="gh-status"></div>
     <div class="gh-actions">
       <button class="gh-cancel" onclick="closeGH()">Cancel</button>
-      <button class="gh-save" id="gh-save-btn" onclick="saveToGH()">Push to GitHub</button>
+      <button class="gh-push" id="gh-btn" onclick="saveToGH()">Push to GitHub</button>
     </div>
   </div>
 </div>
-
-<div id="mm-wrap">
-  <div id="mm-canvas" style="transform: translate(390px, 290px) scale(0.85);">
-    <svg id="mm-svg" width="1" height="1"><path d="M0,0C48.49228331412903,0,48.49228331412903,133.48780407186632,96.98456662825807,133.48780407186632" fill="none" stroke="#85b7eb" stroke-width="1.5" stroke-opacity=".75"></path><path d="M0,0C-78.46216259435016,0,-78.46216259435016,50.987804071866336,-156.92432518870032,50.987804071866336" fill="none" stroke="#97c459" stroke-width="1.5" stroke-opacity=".75"></path><path d="M0,0C-25.493902035933175,0,-25.493902035933175,-156.92432518870032,-50.98780407186635,-156.92432518870032" fill="none" stroke="#ef9f27" stroke-width="1.5" stroke-opacity=".75"></path><path d="M0,0C66.74390203593316,0,66.74390203593316,-96.98456662825811,133.48780407186632,-96.98456662825811" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-opacity=".75"></path><path d="M96.98456662825807,133.48780407186632C175.4467292226082,133.48780407186632,175.4467292226082,184.47560814373264,253.90889181695837,184.47560814373264" fill="none" stroke="#85b7eb" stroke-width="1.5" stroke-opacity=".75"></path><path d="M96.98456662825807,133.48780407186632C145.4768499423871,133.48780407186632,145.4768499423871,266.97560814373264,193.96913325651613,266.97560814373264" fill="none" stroke="#85b7eb" stroke-width="1.5" stroke-opacity=".75"></path><path d="M96.98456662825807,133.48780407186632C96.98456662825808,133.48780407186632,96.98456662825808,298.4878040718663,96.98456662825808,298.4878040718663" fill="none" stroke="#85b7eb" stroke-width="1.5" stroke-opacity=".75"></path><path d="M-156.92432518870032,50.987804071866336C-205.41660850282935,50.987804071866336,-205.41660850282935,184.47560814373264,-253.90889181695837,184.47560814373264" fill="none" stroke="#97c459" stroke-width="1.5" stroke-opacity=".75"></path><path d="M-156.92432518870032,50.987804071866336C-235.38648778305048,50.987804071866336,-235.38648778305048,101.97560814373267,-313.84865037740065,101.97560814373267" fill="none" stroke="#97c459" stroke-width="1.5" stroke-opacity=".75"></path><path d="M-156.92432518870032,50.987804071866336C-235.38648778305048,50.987804071866336,-235.38648778305048,3.552713678800501e-14,-313.84865037740065,3.552713678800501e-14" fill="none" stroke="#97c459" stroke-width="1.5" stroke-opacity=".75"></path><path d="M-50.98780407186635,-156.92432518870032C-99.48008738599539,-156.92432518870032,-99.48008738599539,-290.41212926056664,-147.97237070012443,-290.41212926056664" fill="none" stroke="#ef9f27" stroke-width="1.5" stroke-opacity=".75"></path><path d="M-50.98780407186635,-156.92432518870032C-50.987804071866364,-156.92432518870032,-50.987804071866364,-321.9243251887003,-50.98780407186638,-321.9243251887003" fill="none" stroke="#ef9f27" stroke-width="1.5" stroke-opacity=".75"></path><path d="M133.48780407186632,-96.98456662825811C181.98008738599535,-96.98456662825811,181.98008738599535,-230.47237070012446,230.47237070012437,-230.47237070012446" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-opacity=".75"></path><path d="M133.48780407186632,-96.98456662825811C211.94996666621648,-96.98456662825811,211.94996666621648,-147.9723707001245,290.41212926056664,-147.9723707001245" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-opacity=".75"></path></svg>
-    <div id="mm-nd"><div class="mm-node is-root" style="left: 0px; top: 0px;"><div class="mm-label">Central Idea</div><div class="mm-acts"><button class="mm-btn" title="Add child">+</button><button class="mm-btn" title="Collapse">▼</button></div></div><div class="mm-node" data-c="0" style="left: 96.9846px; top: 133.488px;"><div class="mm-label">Design</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button><button class="mm-btn" title="Collapse">▼</button></div></div><div class="mm-node" data-c="0" style="left: 253.909px; top: 184.476px;"><div class="mm-label">Typography</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="0" style="left: 193.969px; top: 266.976px;"><div class="mm-label">Color Palette</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="0" style="left: 96.9846px; top: 298.488px;"><div class="mm-label">Layout</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="1" style="left: -156.924px; top: 50.9878px;"><div class="mm-label">Development</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button><button class="mm-btn" title="Collapse">▼</button></div></div><div class="mm-node" data-c="1" style="left: -253.909px; top: 184.476px;"><div class="mm-label">Frontend</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="1" style="left: -313.849px; top: 101.976px;"><div class="mm-label">Backend</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="1" style="left: -313.849px; top: 3.55271e-14px;"><div class="mm-label">Testing</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="2" style="left: -50.9878px; top: -156.924px;"><div class="mm-label">Strategy</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button><button class="mm-btn" title="Collapse">▼</button></div></div><div class="mm-node" data-c="2" style="left: -147.972px; top: -290.412px;"><div class="mm-label">Goals</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="2" style="left: -50.9878px; top: -321.924px;"><div class="mm-label">Timeline</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="3" style="left: 133.488px; top: -96.9846px;"><div class="mm-label">Research</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button><button class="mm-btn" title="Collapse">▼</button></div></div><div class="mm-node" data-c="3" style="left: 230.472px; top: -230.472px;"><div class="mm-label">User Tests</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div><div class="mm-node" data-c="3" style="left: 290.412px; top: -147.972px;"><div class="mm-label">Analytics</div><div class="mm-acts"><button class="mm-btn" title="Delete node">−</button><button class="mm-btn" title="Add child">+</button></div></div></div>
-  </div>
-</div>
-<div class="mm-footer">
-  <span>Double-click to rename</span><span>·</span>
-  <span>Hover for +add / −delete / ▼collapse</span><span>·</span>
-  <span>Drag to pan · Scroll to zoom</span>
-</div>
-
 <script>
-let idN = 200;
-function uid(){return 'n'+(++idN)}
-
-const COLORS = ['#378add','#639922','#ba7517','#7f77dd','#d85a30','#d4537e'];
-const STROKES = ['#85b7eb','#97c459','#ef9f27','#afa9ec','#f0997b','#ed93b1'];
-
-let tree = {
-  id:'root',label:'Central Idea',c:-1,col:false,kids:[
-    {id:'k1',label:'Design',c:0,col:false,kids:[
-      {id:'k1a',label:'Typography',c:0,col:false,kids:[]},
-      {id:'k1b',label:'Color Palette',c:0,col:false,kids:[]},
-      {id:'k1c',label:'Layout',c:0,col:false,kids:[]},
-    ]},
-    {id:'k2',label:'Development',c:1,col:false,kids:[
-      {id:'k2a',label:'Frontend',c:1,col:false,kids:[]},
-      {id:'k2b',label:'Backend',c:1,col:false,kids:[]},
-      {id:'k2c',label:'Testing',c:1,col:false,kids:[]},
-    ]},
-    {id:'k3',label:'Strategy',c:2,col:false,kids:[
-      {id:'k3a',label:'Goals',c:2,col:false,kids:[]},
-      {id:'k3b',label:'Timeline',c:2,col:false,kids:[]},
-    ]},
-    {id:'k4',label:'Research',c:3,col:false,kids:[
-      {id:'k4a',label:'User Tests',c:3,col:false,kids:[]},
-      {id:'k4b',label:'Analytics',c:3,col:false,kids:[]},
-    ]},
-  ]
-};
-
-let tf = {tx:0, ty:0, sc:0.85};
-let pos = {};
-let drag = null;
-
-const wrap = document.getElementById('mm-wrap');
-const canvas = document.getElementById('mm-canvas');
-const svgEl = document.getElementById('mm-svg');
-const ndContainer = document.getElementById('mm-nd');
-
-// Tree utilities
-function allVisible(n=tree, a=[]) {
-  a.push(n);
-  if (!n.col) n.kids.forEach(c => allVisible(c, a));
-  return a;
-}
-function find(id, n=tree) {
-  if (n.id===id) return n;
-  for (const c of n.kids) { const f=find(id,c); if(f) return f; }
-  return null;
-}
-function findPar(id, n=tree, p=null) {
-  if (n.id===id) return p;
-  for (const c of n.kids) { const f=findPar(id,c,n); if(f) return f; }
-  return null;
-}
-function lc(n) { return (!n.kids.length||n.col)?1:n.kids.reduce((s,c)=>s+lc(c),0); }
-
-// Layout
-const R = 165;
-function layout(n, x, y, a0, a1) {
-  pos[n.id] = {x, y};
-  if (n.col || !n.kids.length) return;
-  const tot = n.kids.reduce((s,c)=>s+lc(c),0);
-  let a = a0;
-  for (const c of n.kids) {
-    const sp = (lc(c)/tot)*(a1-a0);
-    const mid = a + sp/2;
-    layout(c, x+Math.cos(mid)*R, y+Math.sin(mid)*R, a, a+sp);
-    a += sp;
-  }
-}
-
-function applyTransform() {
-  canvas.style.transform = `translate(${tf.tx}px,${tf.ty}px) scale(${tf.sc})`;
-  document.getElementById('zoom-label').textContent = Math.round(tf.sc*100)+'%';
-}
-
-function render() {
-  layout(tree, 0, 0, 0, Math.PI*2);
-  applyTransform();
-
-  // Paths
-  let paths = '';
-  for (const n of allVisible()) {
-    if (n.col) continue;
-    const p = pos[n.id];
-    if (!p) continue;
-    for (const c of n.kids) {
-      const cp = pos[c.id];
-      if (!cp) continue;
-      const dx = (cp.x - p.x) * 0.5;
-      const col = c.c >= 0 ? STROKES[c.c % STROKES.length] : '#b4b2a9';
-      paths += `<path d="M${p.x},${p.y}C${p.x+dx},${p.y},${cp.x-dx},${cp.y},${cp.x},${cp.y}" fill="none" stroke="${col}" stroke-width="1.5" stroke-opacity=".75"/>`;
-    }
-  }
-  svgEl.innerHTML = paths;
-
-  // Nodes
-  ndContainer.innerHTML = '';
-  for (const n of allVisible()) {
-    const p = pos[n.id];
-    if (!p) continue;
-    const isRoot = n.id === 'root';
-
-    const div = document.createElement('div');
-    div.className = 'mm-node' + (isRoot ? ' is-root' : '');
-    if (!isRoot && n.c >= 0) div.setAttribute('data-c', n.c % 6);
-    div.style.cssText = `left:${p.x}px;top:${p.y}px`;
-    div.addEventListener('mousedown', e => e.stopPropagation());
-
-    const lbl = document.createElement('div');
-    lbl.className = 'mm-label';
-    lbl.textContent = n.label;
-
-    div.addEventListener('dblclick', e => {
-      e.stopPropagation();
-      lbl.contentEditable = 'true';
-      lbl.focus();
-      const r = document.createRange();
-      r.selectNodeContents(lbl);
-      getSelection().removeAllRanges();
-      getSelection().addRange(r);
-    });
-    lbl.addEventListener('blur', () => {
-      lbl.contentEditable = 'false';
-      const node = find(n.id);
-      if (node) node.label = lbl.textContent.trim() || node.label;
-      render();
-    });
-    lbl.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); lbl.blur(); }
-    });
-    div.appendChild(lbl);
-
-    // Action buttons
-    const acts = document.createElement('div');
-    acts.className = 'mm-acts';
-
-    if (!isRoot) {
-      const del = document.createElement('button');
-      del.className = 'mm-btn'; del.textContent = '−'; del.title = 'Delete node';
-      del.addEventListener('click', e => {
-        e.stopPropagation();
-        const par = findPar(n.id);
-        if (par) { par.kids = par.kids.filter(k=>k.id!==n.id); render(); }
-      });
-      acts.appendChild(del);
-    }
-
-    const add = document.createElement('button');
-    add.className = 'mm-btn'; add.textContent = '+'; add.title = 'Add child';
-    add.addEventListener('click', e => {
-      e.stopPropagation();
-      const node = find(n.id);
-      const ci = isRoot ? (node.kids.length % 6) : node.c;
-      node.kids.push({id:uid(), label:'New Topic', c:ci, col:false, kids:[]});
-      node.col = false;
-      render();
-    });
-    acts.appendChild(add);
-
-    if (n.kids.length) {
-      const tog = document.createElement('button');
-      tog.className = 'mm-btn';
-      tog.textContent = n.col ? '▶' : '▼';
-      tog.title = n.col ? 'Expand' : 'Collapse';
-      tog.addEventListener('click', e => {
-        e.stopPropagation();
-        const node = find(n.id);
-        if (node) { node.col = !node.col; render(); }
-      });
-      acts.appendChild(tog);
-    }
-
-    div.appendChild(acts);
-    ndContainer.appendChild(div);
-  }
-}
-
-// Add branch to root
-function addRootChild() {
-  const ci = tree.kids.length % 6;
-  tree.kids.push({id:uid(), label:'New Branch', c:ci, col:false, kids:[]});
-  render();
-}
-
-// Reset view
-function resetView() {
-  const rect = wrap.getBoundingClientRect();
-  tf = {tx: rect.width/2, ty: rect.height/2, sc: 0.85};
-  render();
-}
-
-// Pan
-wrap.addEventListener('mousedown', e => {
-  if (e.button !== 0) return;
-  drag = {sx:e.clientX, sy:e.clientY, tx:tf.tx, ty:tf.ty};
-  wrap.classList.add('dragging');
-});
-document.addEventListener('mousemove', e => {
-  if (!drag) return;
-  tf.tx = drag.tx + (e.clientX - drag.sx);
-  tf.ty = drag.ty + (e.clientY - drag.sy);
-  applyTransform();
-});
-document.addEventListener('mouseup', () => {
-  drag = null;
-  wrap.classList.remove('dragging');
-});
-
-// Zoom
-wrap.addEventListener('wheel', e => {
-  e.preventDefault();
-  const f = e.deltaY > 0 ? 0.92 : 1.09;
-  const ns = Math.max(0.25, Math.min(3, tf.sc * f));
-  const rect = wrap.getBoundingClientRect();
-  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-  tf.tx = mx - (mx - tf.tx)*(ns/tf.sc);
-  tf.ty = my - (my - tf.ty)*(ns/tf.sc);
-  tf.sc = ns;
-  applyTransform();
-}, {passive:false});
-
-// Touch pan
-let touch0 = null;
-wrap.addEventListener('touchstart', e => {
-  if (e.touches.length === 1) {
-    touch0 = {sx:e.touches[0].clientX, sy:e.touches[0].clientY, tx:tf.tx, ty:tf.ty};
-  }
-}, {passive:true});
-wrap.addEventListener('touchmove', e => {
-  if (touch0 && e.touches.length === 1) {
-    tf.tx = touch0.tx + (e.touches[0].clientX - touch0.sx);
-    tf.ty = touch0.ty + (e.touches[0].clientY - touch0.sy);
-    applyTransform();
-  }
-}, {passive:true});
-wrap.addEventListener('touchend', () => { touch0 = null; });
-
-// Always reset GH button on load
-document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('gh-save-btn');if(b){b.textContent='Push to GitHub';b.disabled=false;}});
-
-// Init
-requestAnimationFrame(() => {
-  const r = wrap.getBoundingClientRect();
-  tf.tx = r.width / 2;
-  tf.ty = r.height / 2;
-  render();
-});
-
-// GitHub save
-const LS = 'mmgh_';
-function openGH() {
-  document.getElementById('gh-token').value  = localStorage.getItem(LS+'token')  || '';
-  document.getElementById('gh-repo').value   = localStorage.getItem(LS+'repo')   || '';
-  document.getElementById('gh-branch').value = localStorage.getItem(LS+'branch') || 'main';
-  document.getElementById('gh-file').value   = localStorage.getItem(LS+'file')   || 'mindmap.html';
-  document.getElementById('gh-status').textContent = '';
-  document.getElementById('gh-status').className = '';
-  const btn = document.getElementById('gh-save-btn');
-  btn.textContent = 'Push to GitHub'; btn.disabled = false;
-  document.getElementById('gh-overlay').style.display = 'flex';
-}
-function closeGH() {
-  document.getElementById('gh-overlay').style.display = 'none';
-}
-function setStatus(msg, type) {
-  const el = document.getElementById('gh-status');
-  el.textContent = msg; el.className = type || '';
-}
-async function saveToGH() {
-  const token  = document.getElementById('gh-token').value.trim();
-  const repo   = document.getElementById('gh-repo').value.trim();
-  const branch = document.getElementById('gh-branch').value.trim() || 'main';
-  const file   = document.getElementById('gh-file').value.trim()   || 'mindmap.html';
-  if (!token || !repo) { setStatus('Token and repository are required.','err'); return; }
-
-  const btn = document.getElementById('gh-save-btn');
-  btn.disabled = true; btn.textContent = 'Pushing...';
-  setStatus('');
-
-  localStorage.setItem(LS+'repo', repo);
-  localStorage.setItem(LS+'branch', branch);
-  localStorage.setItem(LS+'file', file);
-
-  btn.textContent = 'Push to GitHub'; btn.disabled = false;
-  let htmlContent = document.documentElement.outerHTML;
-  htmlContent = htmlContent.replace(/id="gh-overlay"[^>]*style="[^"]*display\s*:\s*flex[^"]*"/g, 'id="gh-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center"');
-  htmlContent = htmlContent.replace(/id="gh-save-btn"[^>]*disabled[^>]*>/g, 'id="gh-save-btn" onclick="saveToGH()">');
-  htmlContent = htmlContent.replace(/>Pushing\.\.\.</g, '>Push to GitHub<');
-  btn.disabled = true; btn.textContent = 'Pushing...';
-  const encoded = btoa(unescape(encodeURIComponent(htmlContent)));
-  const apiBase = `https://api.github.com/repos/${repo}/contents/${file}`;
-  const headers = { Authorization: `token ${token}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github+json' };
-
-  try {
-    let sha = null;
-    try {
-      const check = await fetch(`${apiBase}?ref=${branch}`, {headers});
-      if (check.ok) { const d = await check.json(); sha = d.sha; }
-    } catch(e) {}
-
-    const body = { message: `Update mind map - ${new Date().toLocaleString()}`, content: encoded, branch };
-    if (sha) body.sha = sha;
-
-    const res = await fetch(apiBase, { method:'PUT', headers, body: JSON.stringify(body) });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || res.statusText);
-    }
-    const data = await res.json();
-    const pageUrl = `https://${repo.split('/')[0]}.github.io/${repo.split('/')[1]}/${file}`;
-    setStatus(`Pushed! Live at: ${pageUrl}`, 'ok');
-    btn.textContent = 'Pushed!';
-    setTimeout(() => { btn.textContent = 'Push to GitHub'; btn.disabled = false; }, 3000);
-  } catch(e) {
-    setStatus('Error: ' + e.message, 'err');
-  } finally {
-    setTimeout(() => { btn.textContent = 'Push to GitHub'; btn.disabled = false; }, 3000);
-  }
-}
+let idN=200;function uid(){return 'n'+(++idN)}
+const STROKES=['#85b7eb','#97c459','#ef9f27','#afa9ec','#f0997b','#ed93b1'];
+let tree={"id":"root","label":"Central Idea","c":-1,"col":false,"kids":[{"id":"k1","label":"Design","c":0,"col":false,"kids":[{"id":"k1a","label":"Typography","c":0,"col":false,"kids":[]},{"id":"k1b","label":"Color Palette","c":0,"col":false,"kids":[]},{"id":"k1c","label":"Layout","c":0,"col":false,"kids":[]}]},{"id":"k2","label":"Development","c":1,"col":false,"kids":[{"id":"k2a","label":"Frontend","c":1,"col":false,"kids":[]},{"id":"k2b","label":"Backend","c":1,"col":false,"kids":[]},{"id":"k2c","label":"Testing","c":1,"col":false,"kids":[]}]},{"id":"k3","label":"Strategy","c":2,"col":false,"kids":[{"id":"k3a","label":"Goals","c":2,"col":false,"kids":[]},{"id":"k3b","label":"Timeline","c":2,"col":false,"kids":[]}]},{"id":"k4","label":"Research","c":3,"col":false,"kids":[{"id":"k4a","label":"User Tests","c":3,"col":false,"kids":[]},{"id":"k4b","label":"Analytics","c":3,"col":false,"kids":[]}]}]};
+let tf={tx:0,ty:0,sc:0.85},pos={},drag=null;
+const wrap=document.getElementById('mm-wrap');
+const canvas=document.getElementById('mm-canvas');
+const svgEl=document.getElementById('mm-svg');
+const ndContainer=document.getElementById('mm-nd');
+function allVisible(n=tree,a=[]){a.push(n);if(!n.col)n.kids.forEach(c=>allVisible(c,a));return a;}
+function find(id,n=tree){if(n.id===id)return n;for(const c of n.kids){const f=find(id,c);if(f)return f;}return null;}
+function findPar(id,n=tree,p=null){if(n.id===id)return p;for(const c of n.kids){const f=findPar(id,c,n);if(f)return f;}return null;}
+function lc(n){return(!n.kids.length||n.col)?1:n.kids.reduce((s,c)=>s+lc(c),0);}
+const R=165;
+function layout(n,x,y,a0,a1){pos[n.id]={x,y};if(n.col||!n.kids.length)return;const tot=n.kids.reduce((s,c)=>s+lc(c),0);let a=a0;for(const c of n.kids){const sp=(lc(c)/tot)*(a1-a0);const mid=a+sp/2;layout(c,x+Math.cos(mid)*R,y+Math.sin(mid)*R,a,a+sp);a+=sp;}}
+function applyTransform(){canvas.style.transform='translate('+tf.tx+'px,'+tf.ty+'px) scale('+tf.sc+')';document.getElementById('zoom-label').textContent=Math.round(tf.sc*100)+'%';}
+function render(){layout(tree,0,0,0,Math.PI*2);applyTransform();let paths='';for(const n of allVisible()){if(n.col)continue;const p=pos[n.id];if(!p)continue;for(const c of n.kids){const cp=pos[c.id];if(!cp)continue;const dx=(cp.x-p.x)*0.5;const col=c.c>=0?STROKES[c.c%STROKES.length]:'#b4b2a9';paths+='<path d="M'+p.x+','+p.y+'C'+(p.x+dx)+','+p.y+','+(cp.x-dx)+','+cp.y+','+cp.x+','+cp.y+'" fill="none" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".75"/>';}}svgEl.innerHTML=paths;ndContainer.innerHTML='';for(const n of allVisible()){const p=pos[n.id];if(!p)continue;const isRoot=n.id==='root';const div=document.createElement('div');div.className='mm-node'+(isRoot?' is-root':'');if(!isRoot&&n.c>=0)div.setAttribute('data-c',n.c%6);div.style.cssText='left:'+p.x+'px;top:'+p.y+'px';div.addEventListener('mousedown',e=>e.stopPropagation());const lbl=document.createElement('div');lbl.className='mm-label';lbl.textContent=n.label;div.addEventListener('dblclick',e=>{e.stopPropagation();lbl.contentEditable='true';lbl.focus();const r=document.createRange();r.selectNodeContents(lbl);getSelection().removeAllRanges();getSelection().addRange(r);});lbl.addEventListener('blur',()=>{lbl.contentEditable='false';const node=find(n.id);if(node)node.label=lbl.textContent.trim()||node.label;render();});lbl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lbl.blur();}});div.appendChild(lbl);const acts=document.createElement('div');acts.className='mm-acts';if(!isRoot){const del=document.createElement('button');del.className='mm-btn';del.textContent='-';del.addEventListener('click',e=>{e.stopPropagation();const par=findPar(n.id);if(par){par.kids=par.kids.filter(k=>k.id!==n.id);render();}});acts.appendChild(del);}const add=document.createElement('button');add.className='mm-btn';add.textContent='+';add.addEventListener('click',e=>{e.stopPropagation();const node=find(n.id);const ci=isRoot?(node.kids.length%6):node.c;node.kids.push({id:uid(),label:'New Topic',c:ci,col:false,kids:[]});node.col=false;render();});acts.appendChild(add);if(n.kids.length){const tog=document.createElement('button');tog.className='mm-btn';tog.textContent=n.col?'►':'▼';tog.addEventListener('click',e=>{e.stopPropagation();const node=find(n.id);if(node){node.col=!node.col;render();}});acts.appendChild(tog);}div.appendChild(acts);ndContainer.appendChild(div);}}
+function addRootChild(){const ci=tree.kids.length%6;tree.kids.push({id:uid(),label:'New Branch',c:ci,col:false,kids:[]});render();}
+function resetView(){const r=wrap.getBoundingClientRect();tf={tx:r.width/2,ty:r.height/2,sc:0.85};render();}
+wrap.addEventListener('mousedown',e=>{if(e.button!==0)return;drag={sx:e.clientX,sy:e.clientY,tx:tf.tx,ty:tf.ty};wrap.classList.add('dragging');});
+document.addEventListener('mousemove',e=>{if(!drag)return;tf.tx=drag.tx+(e.clientX-drag.sx);tf.ty=drag.ty+(e.clientY-drag.sy);applyTransform();});
+document.addEventListener('mouseup',()=>{drag=null;wrap.classList.remove('dragging');});
+wrap.addEventListener('wheel',e=>{e.preventDefault();const f=e.deltaY>0?0.92:1.09;const ns=Math.max(0.25,Math.min(3,tf.sc*f));const r=wrap.getBoundingClientRect();const mx=e.clientX-r.left,my=e.clientY-r.top;tf.tx=mx-(mx-tf.tx)*(ns/tf.sc);tf.ty=my-(my-tf.ty)*(ns/tf.sc);tf.sc=ns;applyTransform();},{passive:false});
+requestAnimationFrame(()=>{const r=wrap.getBoundingClientRect();tf.tx=r.width/2;tf.ty=r.height/2;render();});
+const LS='mmgh_';
+function openGH(){document.getElementById('gh-token').value=localStorage.getItem(LS+'token')||'';document.getElementById('gh-repo').value=localStorage.getItem(LS+'repo')||'';document.getElementById('gh-branch').value=localStorage.getItem(LS+'branch')||'main';document.getElementById('gh-file').value=localStorage.getItem(LS+'file')||'index.html';document.getElementById('gh-status').textContent='';document.getElementById('gh-status').className='';document.getElementById('gh-btn').textContent='Push to GitHub';document.getElementById('gh-btn').disabled=false;document.getElementById('gh-overlay').style.display='flex';}
+function closeGH(){document.getElementById('gh-overlay').style.display='none';}
+function setStatus(msg,type){const el=document.getElementById('gh-status');el.textContent=msg;el.className=type||'';}
+async function saveToGH(){const token=document.getElementById('gh-token').value.trim();const repo=document.getElementById('gh-repo').value.trim();const branch=document.getElementById('gh-branch').value.trim()||'main';const file=document.getElementById('gh-file').value.trim()||'index.html';if(!token||!repo){setStatus('Token and repository are required.','err');return;}const btn=document.getElementById('gh-btn');btn.disabled=true;btn.textContent='Pushing...';setStatus('');localStorage.setItem(LS+'repo',repo);localStorage.setItem(LS+'branch',branch);localStorage.setItem(LS+'file',file);const treeJson=JSON.stringify(tree);const cleanHtml=TEMPLATE.replace('"__TREE__"',treeJson);const encoded=btoa(unescape(encodeURIComponent(cleanHtml)));const apiBase='https://api.github.com/repos/'+repo+'/contents/'+file;const headers={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};try{let sha=null;try{const chk=await fetch(apiBase+'?ref='+branch,{headers});if(chk.ok){const d=await chk.json();sha=d.sha;}}catch(e){}const body={message:'Update mind map - '+new Date().toLocaleString(),content:encoded,branch};if(sha)body.sha=sha;const res=await fetch(apiBase,{method:'PUT',headers,body:JSON.stringify(body)});if(!res.ok){const err=await res.json();throw new Error(err.message||res.statusText);}const pageUrl='https://'+repo.split('/')[0].toLowerCase()+'.github.io/'+repo.split('/')[1]+'/'+file;setStatus('Pushed! Live at: '+pageUrl,'ok');btn.textContent='Pushed!';setTimeout(()=>{btn.textContent='Push to GitHub';btn.disabled=false;},3000);}catch(e){setStatus('Error: '+e.message,'err');btn.textContent='Push to GitHub';btn.disabled=false;}}
+const TEMPLATE=null;
 </script>
-
-
-</body></html>
+</body>
+</html>
