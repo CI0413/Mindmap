@@ -65,7 +65,7 @@ h1{font-size:15px;font-weight:500;color:#3d3d3a;margin-bottom:12px;letter-spacin
   <button class="tb-btn gh" onclick="openGH()">⬆ Save to GitHub</button>
 </div>
 
-<div id="gh-overlay" style="display: flex; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.45); z-index: 100; align-items: center; justify-content: center;" onclick="if(event.target===this)closeGH()">
+<div id="gh-overlay" style="display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.45); z-index: 100; align-items: center; justify-content: center;" onclick="if(event.target===this)closeGH()">
   <div id="gh-modal">
     <h2>Save to GitHub</h2>
     <div class="gh-field">
@@ -392,8 +392,10 @@ async function saveToGH() {
   localStorage.setItem(LS+'branch', branch);
   localStorage.setItem(LS+'file', file);
 
+  document.getElementById('gh-overlay').style.display = 'none';
   btn.textContent = 'Push to GitHub'; btn.disabled = false;
   const htmlContent = document.documentElement.outerHTML;
+  document.getElementById('gh-overlay').style.display = 'flex';
   btn.disabled = true; btn.textContent = 'Pushing...';
   const encoded = btoa(unescape(encodeURIComponent(htmlContent)));
   const apiBase = `https://api.github.com/repos/${repo}/contents/${file}`;
